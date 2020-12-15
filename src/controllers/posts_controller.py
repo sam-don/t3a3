@@ -49,10 +49,10 @@ def post_show(id):
 def post_update(user, id):
     # Update a post
     post_fields = post_schema.load(request.json)
-    
+
     post = Post.query.filter_by(id=id, user_id=user.id)
 
-    if not post:
+    if post.count() != 1:
         return abort(401, description="Unauthorized to update this book")
 
     post_fields['updated_at'] = datetime.now()
