@@ -1,5 +1,6 @@
 import datetime
 from main import db
+from models.Post import Post
 
 class User(db.Model):
     __tablename__ = "users"
@@ -9,7 +10,7 @@ class User(db.Model):
     email = db.Column(db.String(), nullable=False, unique=True)
     password = db.Column(db.String(), nullable=False)
     created_at = db.Column(db.DateTime(), nullable=False)
-    # books = db.relationship("Book", backref="user", lazy="dynamic")
+    posts = db.relationship("Post", backref="user", lazy="dynamic")
 
     def __repr__(self):
         return f"<User {self.email}>"
