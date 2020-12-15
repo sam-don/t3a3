@@ -12,4 +12,4 @@ class Post(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
 
     def __repr__(self):
-        return f"<Book {self.title}>"
+        return f"<Post {self.id}>"

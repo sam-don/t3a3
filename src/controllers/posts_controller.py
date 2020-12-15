@@ -1,3 +1,4 @@
+from types import ClassMethodDescriptorType
 from models.Post import Post
 from models.User import User
 from main import db
@@ -14,7 +15,6 @@ posts = Blueprint('posts', __name__, url_prefix="/posts")
 def post_index():
     # Retrieve all posts
     posts = Post.query.options(joinedload("user")).all()
-    # posts = Post.query.all()
     return jsonify(posts_schema.dump(posts))
 
 @posts.route("/", methods=["POST"])
@@ -36,3 +36,40 @@ def post_create(user):
     db.session.commit()
     
     return jsonify(post_schema.dump(new_post))
+
+@posts.route("/<int:id>", methods=["GET"])
+def post_show(id):
+    # Return a single post
+    post = Post.query.get(id)
+    return jsonify(post_schema.dump(post))
+
+@posts.route("/<int:id>", methods=["PUT", "PATCH"])
+@jwt_required
+@verify_user
+def post_update(user, id):
+    # Update a post
+    post_fields = post_schema.load(request.json)
+    
+    post = Post.query.filter_by(id=id, user_id=user.id)
+
+    if not post:
+        return abort(401, description="Unauthorized to update this book")
+
+    post_fields['updated_at'] = datetime.now()
+    post.update(post_fields)
+    db.session.commit()
+
+    return jsonify(post_schema.dump(post[0]))
+
+@posts.route("/<int:id>", methods=["DELETE"])
+@jwt_required
+@verify_user
+def post_delete(user, id):
+    post = Post.query.filter_by(id=id, user_id=user.id).first()
+
+    if not post:
+        return abort(400, description="Unauthorized to update this profile")
+    
+    db.session.delete(post)
+    db.session.commit()
+    return jsonify(post_schema.dump(post))
