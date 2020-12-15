@@ -3,7 +3,7 @@ from schemas.UserSchema import user_schema
 from models.User import User
 from main import db, bcrypt
 from flask_jwt_extended import create_access_token
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 auth = Blueprint("auth",  __name__,  url_prefix="/auth")
 
@@ -18,7 +18,9 @@ def auth_register():
     
     user = User()
     user.email = user_fields["email"]
+    user.name = user_fields["name"]
     user.password = bcrypt.generate_password_hash(user_fields["password"]).decode("utf-8")
+    user.created_at = datetime.now()
 
     db.session.add(user)
     db.session.commit()
