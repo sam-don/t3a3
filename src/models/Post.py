@@ -1,4 +1,5 @@
 from main import db
+from models.PostImage import PostImage
 
 class Post(db.Model):
     __tablename__ = "posts"
@@ -9,7 +10,8 @@ class Post(db.Model):
     updated_at = db.Column(db.DateTime(), nullable=False)
     total_likes = db.Column(db.Integer)
     total_comments = db.Column(db.Integer)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    post_image = db.relationship("PostImage", backref="posts", uselist=False)
 
     def __repr__(self):
         return f"<Post {self.id}>"

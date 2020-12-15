@@ -53,7 +53,7 @@ def post_update(user, id):
     post = Post.query.filter_by(id=id, user_id=user.id)
 
     if post.count() != 1:
-        return abort(401, description="Unauthorized to update this book")
+        return abort(401, description="Unauthorized to update this post")
 
     post_fields['updated_at'] = datetime.now()
     post.update(post_fields)
@@ -65,10 +65,11 @@ def post_update(user, id):
 @jwt_required
 @verify_user
 def post_delete(user, id):
+    # Delete a post
     post = Post.query.filter_by(id=id, user_id=user.id).first()
 
     if not post:
-        return abort(400, description="Unauthorized to update this profile")
+        return abort(400, description="Unauthorized to update this post")
     
     db.session.delete(post)
     db.session.commit()
