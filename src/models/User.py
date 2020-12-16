@@ -10,6 +10,7 @@ class User(db.Model):
     password = db.Column(db.String(), nullable=False)
     created_at = db.Column(db.DateTime(), nullable=False)
     posts = db.relationship("Post", backref="user", lazy="dynamic")
+    post_like = db.relationship("PostLike", backref="user")
 
     def __repr__(self):
         return f"<User {self.email}>"
