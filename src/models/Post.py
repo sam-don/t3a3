@@ -13,7 +13,7 @@ class Post(db.Model):
     updated_at = db.Column(db.DateTime(), nullable=False)
     total_likes = db.Column(db.Integer, nullable=False, default=0)
     total_dislikes = db.Column(db.Integer, nullable=False, default=0)
-    total_comments = db.Column(db.Integer)
+    total_comments = db.Column(db.Integer, default=0)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     post_image = db.relationship("PostImage", backref="posts", uselist=False)
     post_like = db.relationship("PostLike", backref="posts")

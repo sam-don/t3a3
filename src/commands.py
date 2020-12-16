@@ -32,8 +32,6 @@ def seed_db():
     
     db.session.commit()
 
-    # Also change this to whatever you're doing
-
     for i in range(20):
         post = Post()
         post.caption = faker.catch_phrase()
@@ -42,7 +40,7 @@ def seed_db():
         post.total_likes = 0
         post.total_comments = 0
         post.user_id = random.choice(users).id
-        db.session.add(post)
+        db.session.add(post)        
     
     db.session.commit()
     print("Tables seeded")
