@@ -8,6 +8,7 @@ from schemas.PostImageSchema import post_image_schema, post_images_schema
 import boto3, uuid
 from main import db
 from pathlib import Path
+from datetime import datetime
 
 post_images = Blueprint("post_images", __name__, url_prefix="/posts/<int:post_id>/image")
 
@@ -44,6 +45,7 @@ def post_image_create(user, post_id):
         new_image = PostImage()
         new_image.filename = filename
         post.post_image = new_image
+        post.updated_at = datetime.now()
         db.session.commit()
     else:
         return abort(401, description="Image already exists")

@@ -27,10 +27,11 @@ def post_like_create(user, post_id):
 
     new_post_like = PostLike()
     new_post_like.created_at = datetime.now()
-    # new_post_like.post_id = post_id
+    new_post_like.post_id = post_id
     user.post_like.append(new_post_like)
     post.post_like.append(new_post_like)
     post.total_likes = post.total_likes + 1
+    post.updated_at = datetime.now()
     db.session.commit()
 
     return jsonify(post_like_schema.dump(new_post_like))
