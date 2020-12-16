@@ -5,14 +5,14 @@ from services.auth_service import verify_user
 from models.PostLike import PostLike
 from models.PostDislike import PostDislike
 from models.Post import Post
-from schemas.PostLikeSchema import post_like_schema
+from schemas.PostDislikeSchema import post_dislike_schema
 from main import db
 from datetime import datetime
 
 
-post_likes = Blueprint('post_likes', __name__, url_prefix="/posts/<int:post_id>/like")
+post_dislikes = Blueprint('post_dislikes', __name__, url_prefix="/posts/<int:post_id>/dislike")
 
-@post_likes.route("/", methods=["POST"])
+@post_dislikes.route("/", methods=["POST"])
 @jwt_required
 @verify_user
 def post_like_create(user, post_id):
@@ -31,13 +31,13 @@ def post_like_create(user, post_id):
     if already_disliked.count() > 0:
         abort(401, description="User has already disliked this post")
 
-    new_post_like = PostLike()
-    new_post_like.created_at = datetime.now()
-    new_post_like.post_id = post_id
-    user.post_like.append(new_post_like)
-    post.post_like.append(new_post_like)
-    post.total_likes = post.total_likes + 1
+    new_post_dislike = PostDislike()
+    new_post_dislike.created_at = datetime.now()
+    new_post_dislike.post_id = post_id
+    user.post_dislike.append(new_post_dislike)
+    post.post_dislike.append(new_post_dislike)
+    post.total_dislikes = post.total_dislikes + 1
     post.updated_at = datetime.now()
     db.session.commit()
 
-    return jsonify(post_like_schema.dump(new_post_like))
+    return jsonify(post_dislike_schema.dump(new_post_dislike))

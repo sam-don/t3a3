@@ -11,6 +11,7 @@ class PostSchema(ma.SQLAlchemyAutoSchema):
     created_at = ma.DateTime()
     updated_at = ma.DateTime()
     total_likes = ma.Integer()
+    total_dislikes = ma.Integer()
     total_comments = ma.Integer()
     user = ma.Nested(UserSchema)
 

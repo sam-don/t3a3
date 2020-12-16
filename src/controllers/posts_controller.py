@@ -30,6 +30,7 @@ def post_create(user):
     new_post.updated_at = datetime.now()
     new_post.total_comments = 0
     new_post.total_likes = 0
+    new_post.total_dislikes = 0
 
     user.posts.append(new_post)
 

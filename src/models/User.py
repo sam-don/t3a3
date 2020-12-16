@@ -11,6 +11,8 @@ class User(db.Model):
     created_at = db.Column(db.DateTime(), nullable=False)
     posts = db.relationship("Post", backref="user", lazy="dynamic")
     post_like = db.relationship("PostLike", backref="user")
+    post_dislike = db.relationship("PostDislike", backref="user")
+
 
     def __repr__(self):
         return f"<User {self.email}>"
