@@ -4,12 +4,18 @@ from flask_migrate import current
 from services.auth_service import verify_user
 from models.PostImage import PostImage
 from models.Post import Post
-from schemas.PostImageSchema import post_image_schema
+from schemas.PostImageSchema import post_image_schema, post_images_schema
 import boto3, uuid
 from main import db
 from pathlib import Path
 
 post_images = Blueprint("post_images", __name__, url_prefix="/posts/<int:post_id>/image")
+
+@post_images.route("/", methods=["GET"])
+def post_image_index(post_id):
+    post_images = PostImage.query.filter_by(post_id=post_id)
+    return jsonify(post_images_schema.dump(post_images))
+
 
 @post_images.route("/", methods=["POST"])
 @jwt_required
@@ -39,13 +45,15 @@ def post_image_create(user, post_id):
         new_image.filename = filename
         post.post_image = new_image
         db.session.commit()
+    else:
+        return abort(401, description="Image already exists")
 
-    return ("", 201)
+    return jsonify(post_image_schema.dump(new_image))
 
 
-@post_images.route("/<int:id>", methods=["GET"])
-def post_image_show(post_id, id):
-    post_image = PostImage.query.filter_by(id=id).first()
+@post_images.route("/<string:filename>", methods=["GET"])
+def post_image_show(post_id, filename):
+    post_image = PostImage.query.filter_by(filename=filename).first()
 
     if not post_image:
         return abort(401, description="Invalid post")

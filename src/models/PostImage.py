@@ -8,4 +8,4 @@ class PostImage(db.Model):
     post_id = db.Column(db.Integer, db.ForeignKey("posts.id"), nullable=False)
 
     def __repr__(self):
-        return f"<PostImage {self.filename}>"
+        return f"<PostImage {self.id}>"

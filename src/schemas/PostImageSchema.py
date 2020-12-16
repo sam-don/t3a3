@@ -9,3 +9,4 @@ class PostImageSchema(ma.SQLAlchemyAutoSchema):
     filename = ma.String(required=True, validate=Length(min=1))
 
 post_image_schema = PostImageSchema()
+post_images_schema = PostImageSchema(many=True)
