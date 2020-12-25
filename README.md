@@ -61,7 +61,7 @@ The next feature which was added was to give users the ability to either like OR
 
 #### Running the app
 
-1. Create a .env file in the root directory and add the necessary variables
+1. Create a .env file in the root directory and add the necessary variables (follow env_example.txt)
 
 2. Export the environment variables `FLASK_APP` and `FLASK_ENV` if not done through the .env file
 
