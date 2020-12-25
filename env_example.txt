@@ -1,0 +1,25 @@
+# Create a .env file in the root directory (same level as this file) and add the following variables.
+
+# Flask app environment variables
+# Uncomment the following two lines or load manually using 'export' command 
+
+# FLASK_APP=src/main.py
+# FLASK_ENV=development
+
+# Postgres database variables, recommended to have two separate databases, with one for testing
+# Example: 'postgresql+psycopg2://[user]:[password]@[ip address/localhost]:[port]/[database name]'
+
+DB_URI=
+DB_URI_TEST=
+
+# AWS Access Keys
+
+AWS_ACCESS_KEY_ID=
+
+AWS_SECRET_ACCESS_KEY=
+
+AWS_S3_BUCKET=
+
+# JWT Authentication Key
+
+JWT_SECRET_KEY=
