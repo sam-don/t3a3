@@ -97,67 +97,67 @@ The next feature which was added was to give users the ability to either like OR
 
 **GET /posts/**
 
-Returns all posts
+    Returns all posts
 
-\* Note that for the purposes of this assignment, this endpoint actually returns a HTML page as it is currently. To revert back to API functionality, line 20 of `posts_controller.py` can be commented out and line 19 can be uncommented.
+    \* Note that for the purposes of this assignment, this endpoint actually returns a HTML page as it is currently. To revert back to API functionality, line 20 of `posts_controller.py` can be commented out and line 19 can be uncommented.
 
 **POST /posts/**
 
-Create a post - Authorisation required
+    Create a post - Authorisation required
 
-Input:
-- caption
+    Input:
+    - caption
 
 **GET /posts/\<id>**
 
-Get a single post by id
+    Get a single post by id
 
 **PUT/PATCH /posts/\<id>**
 
-Update a post - Authorisation required
+    Update a post - Authorisation required
 
-Input:
-- caption
+    Input:
+    - caption
 
 **DELETE /posts/\<id>**
 
-Delete a post - Authorisation required
+    Delete a post - Authorisation required
 
 **POST /posts/\<id>/like/**
 
-Like a post - Authorisation required
+    Like a post - Authorisation required
 
 **POST /posts/\<id>/dislike/**
 
-Dislike a post - Authorisation required
+    Dislike a post - Authorisation required
 
 **GET /posts/\<id>/image**
 
-Get post image details, returns filename and id
+    Get post image details, returns filename and id
 
 **GET /posts/\<id>/image/\<filename>**
 
-Get post image
+    Get post image
 
 **DELETE /posts/\<id>/image/\<id>**
 
-Delete a post image
+    Delete a post image
 
 #### users
 
 **POST /auth/register/**
 
-Register a new user
+    Register a new user
 
-Input:
-- email
-- name
-- password
+    Input:
+    - email
+    - name
+    - password
 
 **POST /auth/login/**
 
-Login existing user
+    Login existing user
 
-Input:
-- email
-- password
+    Input:
+    - email
+    - password
