@@ -13,12 +13,16 @@ db_commands = Blueprint("db-custom", __name__)
 
 @db_commands.cli.command("drop")
 def drop_db():
+    # Drop all tables from database
+    
     db.drop_all()
     db.engine.execute("DROP TABLE IF EXISTS alembic_version;")
     print("Tables deleted")
 
 @db_commands.cli.command("seed")
 def seed_db():
+    # Seed database with example data
+
     from models.Post import Post
     from models.User import User
     from main import bcrypt
@@ -54,6 +58,8 @@ def seed_db():
 
 @db_commands.cli.command("dump")
 def dump_db():
+
+    # Exports all tables in the database as a dbdump.json file in the projects root directory
 
     tables = ['posts', 'users', 'post_likes', 'post_dislikes', 'post_images']
     schemas = [posts_schema, users_schema, post_likes_schema, post_dislikes_schema, post_images_schema]

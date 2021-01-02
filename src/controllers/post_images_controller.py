@@ -14,6 +14,7 @@ post_images = Blueprint("post_images", __name__, url_prefix="/posts/<int:post_id
 
 @post_images.route("/", methods=["GET"])
 def post_image_index(post_id):
+    # Get post images
     post_images = PostImage.query.filter_by(post_id=post_id)
     return jsonify(post_images_schema.dump(post_images))
 
@@ -22,6 +23,7 @@ def post_image_index(post_id):
 @jwt_required
 @verify_user
 def post_image_create(user, post_id):
+    # Add post image
     post = Post.query.filter_by(id=post_id, user_id=user.id).first()
 
     if not post:
@@ -55,6 +57,8 @@ def post_image_create(user, post_id):
 
 @post_images.route("/<string:filename>", methods=["GET"])
 def post_image_show(post_id, filename):
+    # Retrieve post image
+
     post_image = PostImage.query.filter_by(filename=filename).first()
 
     if not post_image:
@@ -77,6 +81,7 @@ def post_image_show(post_id, filename):
 @jwt_required
 @verify_user
 def post_image_delete(user, post_id, id):
+    # Delete post image
     post = Post.query.filter_by(id=post_id, user_id=user.id).first()
 
     if not post:

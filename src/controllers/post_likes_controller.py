@@ -16,6 +16,7 @@ post_likes = Blueprint('post_likes', __name__, url_prefix="/posts/<int:post_id>/
 @jwt_required
 @verify_user
 def post_like_create(user, post_id):
+    # Create a like
     post = Post.query.filter_by(id=post_id).first()
 
     if not post:

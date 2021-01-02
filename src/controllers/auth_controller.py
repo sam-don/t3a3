@@ -9,6 +9,8 @@ auth = Blueprint("auth",  __name__,  url_prefix="/auth")
 
 @auth.route("/register", methods=["POST"])
 def auth_register():
+    # New user registration
+
     user_fields = user_schema.load(request.json)
 
     user = User.query.filter_by(email=user_fields["email"]).first()
@@ -29,6 +31,8 @@ def auth_register():
 
 @auth.route("/login", methods=["POST"])
 def auth_login():
+    # User login
+    
     user_fields = user_schema.load(request.json)
 
     user = User.query.filter_by(email=user_fields["email"]).first()
