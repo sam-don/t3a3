@@ -99,8 +99,8 @@ The next feature which was added was to give users the ability to either like OR
 
     Returns all posts
 
-    \* Note that for the purposes of this assignment, this endpoint actually returns a HTML page as it is currently. 
-    To revert back to API functionality, line 20 of `posts_controller.py` can be commented out and line 19 can be uncommented.
+  Note that for the purposes of this assignment, this endpoint actually returns a HTML page as it is currently. 
+ To revert back to API functionality, line 20 of `posts_controller.py` can be commented out and line 19 can be uncommented.
 
 **POST /posts/**
 
