@@ -17,7 +17,9 @@ The next feature which was added was to give users the ability to either like OR
 - Boto3
 - Bcrypt
 
-### Installation
+### Using the app
+
+#### Installation
 
 1. Install Python 3.8, python3-pip and python3.8-venv
 
@@ -76,3 +78,86 @@ The next feature which was added was to give users the ability to either like OR
 5. Run flask app
 
     `flask run`
+
+#### Seed the database
+
+1. Run the following command to seed the database with some example posts and users
+   
+    `flask db-custom seed`
+
+#### Dump database to file
+
+1. Run the following command to dump the database into a `dbdump.json` file in the projects root directory
+
+    `flask db-custom dump`
+
+### Available Endpoints
+
+#### posts
+
+**GET /posts/**
+
+Returns all posts
+
+\* Note that for the purposes of this assignment, this endpoint actually returns a HTML page as it is currently. To revert back to API functionality, line 20 of `posts_controller.py` can be commented out and line 19 can be uncommented.
+
+**POST /posts/**
+
+Create a post - Authorisation required
+
+Input:
+- caption
+
+**GET /posts/\<id>**
+
+Get a single post by id
+
+**PUT/PATCH /posts/\<id>**
+
+Update a post - Authorisation required
+
+Input:
+- caption
+
+**DELETE /posts/\<id>**
+
+Delete a post - Authorisation required
+
+**POST /posts/\<id>/like/**
+
+Like a post - Authorisation required
+
+**POST /posts/\<id>/dislike/**
+
+Dislike a post - Authorisation required
+
+**GET /posts/\<id>/image**
+
+Get post image details, returns filename and id
+
+**GET /posts/\<id>/image/\<filename>**
+
+Get post image
+
+**DELETE /posts/\<id>/image/\<id>**
+
+Delete a post image
+
+#### users
+
+**POST /auth/register/**
+
+Register a new user
+
+Input:
+- email
+- name
+- password
+
+**POST /auth/login/**
+
+Login existing user
+
+Input:
+- email
+- password
