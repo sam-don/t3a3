@@ -7,6 +7,7 @@ from flask import Blueprint, request, jsonify, abort, render_template
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from services.auth_service import verify_user
 from sqlalchemy.orm import joinedload
+from sqlalchemy.sql import func
 from datetime import datetime
 
 posts = Blueprint('posts', __name__, url_prefix="/posts")
@@ -76,3 +77,9 @@ def post_delete(user, id):
     db.session.delete(post)
     db.session.commit()
     return jsonify(post_schema.dump(post))
+
+@posts.route("total-likes", methods=["GET"])
+def post_total_likes():
+    # Get the total number of likes on all posts
+    total_likes = db.session.query(func.sum(Post.total_likes)).first()
+    return jsonify({'total_likes': total_likes[0]})
