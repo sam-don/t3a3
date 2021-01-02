@@ -1,6 +1,13 @@
 from main import db
 from flask import Blueprint
 from datetime import datetime
+from models.Post import Post
+from schemas.PostSchema import posts_schema
+from schemas.UserSchema import users_schema
+from schemas.PostLikeSchema import post_likes_schema
+from schemas.PostDislikeSchema import post_dislikes_schema
+from schemas.PostImageSchema import post_images_schema
+import json
 
 db_commands = Blueprint("db-custom", __name__)
 
@@ -44,3 +51,23 @@ def seed_db():
     
     db.session.commit()
     print("Tables seeded")
+
+@db_commands.cli.command("dump")
+def dump_db():
+
+    tables = ['posts', 'users', 'post_likes', 'post_dislikes', 'post_images']
+    schemas = [posts_schema, users_schema, post_likes_schema, post_dislikes_schema, post_images_schema]
+
+    file = open('dbdump.json', 'w')
+    file.close()
+
+    for index, table in enumerate(tables):
+        query = db.engine.execute(f'SELECT * FROM {table}')
+        data = schemas[index].dump(query)
+
+        data = json.dumps(data)
+
+        file = open('dbdump.json', 'a')
+        file.write(data)
+        file.close()
+

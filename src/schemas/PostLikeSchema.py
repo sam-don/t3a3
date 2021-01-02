@@ -12,3 +12,4 @@ class PostLikeSchema(ma.SQLAlchemyAutoSchema):
     created_at = ma.DateTime()
 
 post_like_schema = PostLikeSchema()
+post_likes_schema = PostLikeSchema(many=True)

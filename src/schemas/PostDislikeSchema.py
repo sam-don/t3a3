@@ -12,3 +12,4 @@ class PostDislikeSchema(ma.SQLAlchemyAutoSchema):
     created_at = ma.DateTime()
 
 post_dislike_schema = PostDislikeSchema()
+post_dislikes_schema = PostDislikeSchema(many=True)
