@@ -3,7 +3,7 @@ from models.Post import Post
 from models.User import User
 from main import db
 from schemas.PostSchema import post_schema, posts_schema
-from flask import Blueprint, request, jsonify, abort
+from flask import Blueprint, request, jsonify, abort, render_template
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from services.auth_service import verify_user
 from sqlalchemy.orm import joinedload
@@ -15,7 +15,8 @@ posts = Blueprint('posts', __name__, url_prefix="/posts")
 def post_index():
     # Retrieve all posts
     posts = Post.query.options(joinedload("user")).all()
-    return jsonify(posts_schema.dump(posts))
+    # return jsonify(posts_schema.dump(posts))
+    return render_template("posts.html", posts=posts)
 
 @posts.route("/", methods=["POST"])
 @jwt_required
