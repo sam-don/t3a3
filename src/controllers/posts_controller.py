@@ -15,7 +15,7 @@ posts = Blueprint('posts', __name__, url_prefix="/posts")
 @posts.route("/", methods=["GET"])
 def post_index():
     # Retrieve all posts
-    posts = Post.query.options(joinedload("user")).all()
+    posts = Post.query.order_by(Post.created_at).options(joinedload("user")).all()
     # return jsonify(posts_schema.dump(posts))
     return render_template("posts.html", posts=posts)
 
