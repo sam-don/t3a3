@@ -6,6 +6,16 @@ For this assessment I have chosen to implement an Instagram-like app with and up
 
 The next feature which was added was to give users the ability to either like OR dislike a post! This new feature may also be used in the future to gather data and develop better algorithms to show users content that they really want to see. 
 
+### Reports
+
+#### Analysis of privacy and security concerns
+
+Given the social media aspect of this application, there are many important privacy and security concerns that need to be taken into consideration. As it is now, this application does not allow users to choose whether their posts are public or if they should only be accessible to either themselves or to a limited selection of users. Given that anything posted on this platform will be accessible by anyone, it is crucial that users are aware of this. Even better, it would be best to give users the ability to decide who will be allowed to see their posts. This needs to be implemented in such a way that malicious actors would not be able to access any data unless it is explicitly made public by the owner. The best solution for this would be to have all sensitive data stored on a private subnet, with no outside connection available apart from for the application itself. The use of an ORM protects against methods such as SQL injection, and it would also help considerably to validate data on the client side to prevent malicious activity. While passwords are hashed and stored securely, it would be best to instruct users on how to set up a secure password, and encourage or potentially even enforce two factor authentication, to prevent access from anyone that is not the user.
+
+#### Professional, ethical and legal obligations
+
+Given that this application is designed to allow users to share content with others, it is important that users understand what this means. On sign up, or even before that, it should be made clear that when content is made publically available, absolutely anyone can see it and is incredibly difficult and potentially impossible to undo and take out of the hands of anyone that saw and saved it. This should also be stated in the terms and conditions and include a clause that the platform can not be held liable in the event that a user has publically shared content that they wished to keep private. Despite this, the platform should still make best efforts to remove any copies of said content anywhere on the platform for the user. The terms and conditions of using this application should also state clearly that certain types of content are not allowed on the platform. This can include a range of sensitive content including cyber bullying, fake news, and traumatic photos or videos. The platform has an obligation to monitor the content that is shared on it and remove any content that breaches the terms and conditions, and to also warn and potentially remove the accounts that are infringing them. 
+
 ### Dependencies
 
 - Python 3.8+
