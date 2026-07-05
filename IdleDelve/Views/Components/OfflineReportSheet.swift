@@ -6,30 +6,40 @@ struct OfflineReportSheet: View {
 
     var body: some View {
         VStack(spacing: 20) {
+            Image(systemName: "moon.stars.fill")
+                .font(.largeTitle)
+                .foregroundStyle(Theme.essence)
+
             Text("Welcome Back")
-                .font(.title2.bold())
+                .font(.system(.title2, design: .rounded).weight(.bold))
+                .foregroundStyle(.white)
 
             Text("Your hero delved on without you for \(formattedDuration).")
                 .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(.white.opacity(0.6))
                 .multilineTextAlignment(.center)
 
             VStack(spacing: 12) {
-                offlineStatRow(icon: "dollarsign.circle.fill", label: "Gold earned", value: report.gold.abbreviated(), tint: .yellow)
-                offlineStatRow(icon: "star.fill", label: "XP earned", value: report.xp.abbreviated(), tint: .purple)
+                offlineStatRow(icon: "dollarsign.circle.fill", label: "Gold earned", value: report.gold.abbreviated(), tint: Theme.gold)
+                offlineStatRow(icon: "star.fill", label: "XP earned", value: report.xp.abbreviated(), tint: Theme.xpColor)
                 offlineStatRow(icon: "figure.stairs", label: "Floors cleared", value: "\(report.floorsCleared)", tint: .blue)
                 if !report.loot.isEmpty {
-                    offlineStatRow(icon: "shippingbox.fill", label: "Items found", value: "\(report.loot.count)", tint: .green)
+                    offlineStatRow(icon: "shippingbox.fill", label: "Items found", value: "\(report.loot.count)", tint: Theme.hp)
                 }
             }
-            .padding()
-            .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 16))
+            .cardStyle()
 
             Button("Continue", action: onDismiss)
-                .buttonStyle(.borderedProminent)
-                .controlSize(.large)
+                .font(.headline)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 12)
+                .background(Capsule().fill(Theme.essenceGradient))
+                .foregroundStyle(.white)
+                .buttonStyle(.plain)
         }
         .padding(24)
+        .background(Theme.backgroundGradient.ignoresSafeArea())
+        .preferredColorScheme(.dark)
     }
 
     private var formattedDuration: String {
@@ -44,8 +54,9 @@ struct OfflineReportSheet: View {
                 .foregroundStyle(tint)
             Spacer()
             Text(value)
-                .fontWeight(.semibold)
+                .fontWeight(.bold)
                 .monospacedDigit()
+                .foregroundStyle(.white)
         }
     }
 }

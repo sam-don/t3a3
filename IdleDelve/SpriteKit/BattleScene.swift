@@ -1,4 +1,5 @@
 import SpriteKit
+import UIKit
 
 /// Lightweight placeholder-art battle stage: emoji "sprites" for hero/enemy
 /// so the combat loop has real visual feedback (lunges, hit flashes,
@@ -7,9 +8,11 @@ import SpriteKit
 final class BattleScene: SKScene {
     private let heroLabel = SKLabelNode(text: "🥷")
     private let enemyLabel = SKLabelNode(text: "👹")
-    private let backdrop = SKShapeNode()
+    private let backdrop = SKSpriteNode(color: .black, size: .zero)
+    private let emberEmitter = SKEmitterNode()
     private let hpBarBackground = SKShapeNode(rectOf: CGSize(width: 140, height: 14), cornerRadius: 7)
     private let hpBarFill = SKShapeNode()
+    private let hpBarHighlight = SKShapeNode()
     private let hpBarWidth: CGFloat = 136
 
     private var heroDefaultPosition: CGPoint = .zero
@@ -35,11 +38,13 @@ final class BattleScene: SKScene {
     }
 
     private func buildScene() {
-        backdrop.path = CGPath(rect: CGRect(x: -size.width / 2, y: -size.height / 2, width: size.width, height: size.height), transform: nil)
-        backdrop.fillColor = SKColor(hue: 0.6, saturation: 0.35, brightness: 0.16, alpha: 1)
-        backdrop.strokeColor = .clear
+        backdrop.size = size
+        backdrop.position = .zero
         backdrop.zPosition = -10
         addChild(backdrop)
+        setBackdropHue(0.6)
+
+        configureEmberEmitter()
 
         heroDefaultPosition = CGPoint(x: -size.width * 0.24, y: -10)
         enemyDefaultPosition = CGPoint(x: size.width * 0.24, y: -10)
@@ -56,16 +61,23 @@ final class BattleScene: SKScene {
         enemyLabel.zPosition = 5
         addChild(enemyLabel)
 
-        hpBarBackground.fillColor = SKColor(white: 0, alpha: 0.4)
-        hpBarBackground.strokeColor = SKColor(white: 1, alpha: 0.25)
+        hpBarBackground.fillColor = SKColor(white: 0, alpha: 0.45)
+        hpBarBackground.strokeColor = SKColor(white: 1, alpha: 0.2)
         hpBarBackground.position = CGPoint(x: enemyDefaultPosition.x, y: enemyDefaultPosition.y + 46)
         hpBarBackground.zPosition = 6
         addChild(hpBarBackground)
 
-        hpBarFill.fillColor = .systemRed
         hpBarFill.strokeColor = .clear
         hpBarFill.zPosition = 7
         hpBarBackground.addChild(hpBarFill)
+
+        hpBarHighlight.fillColor = SKColor(white: 1, alpha: 0.25)
+        hpBarHighlight.strokeColor = .clear
+        hpBarHighlight.zPosition = 8
+        let highlightRect = CGRect(x: -hpBarWidth / 2, y: 1, width: hpBarWidth, height: 4)
+        hpBarHighlight.path = CGPath(roundedRect: highlightRect, cornerWidth: 2, cornerHeight: 2, transform: nil)
+        hpBarBackground.addChild(hpBarHighlight)
+
         setEnemyHPFraction(1)
     }
 
@@ -130,10 +142,14 @@ final class BattleScene: SKScene {
         let width = max(0.001, hpBarWidth * clamped)
         let rect = CGRect(x: -hpBarWidth / 2, y: -6, width: width, height: 12)
         hpBarFill.path = CGPath(roundedRect: rect, cornerWidth: 5, cornerHeight: 5, transform: nil)
+        hpBarFill.fillColor = clamped > 0.3
+            ? SKColor(red: 0.86, green: 0.22, blue: 0.30, alpha: 1)
+            : SKColor(red: 0.95, green: 0.55, blue: 0.15, alpha: 1)
+        hpBarHighlight.isHidden = clamped <= 0
     }
 
     private func setBackdropHue(_ hue: Double) {
-        backdrop.fillColor = SKColor(hue: CGFloat(hue), saturation: 0.45, brightness: 0.16, alpha: 1)
+        backdrop.texture = Self.makeBackdropTexture(hue: CGFloat(hue))
     }
 
     private func punch(_ node: SKLabelNode) {
@@ -159,5 +175,76 @@ final class BattleScene: SKScene {
             ]),
             .removeFromParent()
         ]))
+    }
+
+    private func configureEmberEmitter() {
+        emberEmitter.particleTexture = Self.makeGlowTexture()
+        emberEmitter.position = CGPoint(x: 0, y: -size.height / 2)
+        emberEmitter.particlePositionRange = CGVector(dx: size.width, dy: 0)
+        emberEmitter.particleBirthRate = 3.5
+        emberEmitter.particleLifetime = 5
+        emberEmitter.particleLifetimeRange = 2
+        emberEmitter.emissionAngle = .pi / 2
+        emberEmitter.emissionAngleRange = .pi / 10
+        emberEmitter.particleSpeed = 16
+        emberEmitter.particleSpeedRange = 10
+        emberEmitter.xAcceleration = 0
+        emberEmitter.yAcceleration = 4
+        emberEmitter.particleAlpha = 0.55
+        emberEmitter.particleAlphaRange = 0.3
+        emberEmitter.particleAlphaSpeed = -0.13
+        emberEmitter.particleScale = 0.55
+        emberEmitter.particleScaleRange = 0.3
+        emberEmitter.particleScaleSpeed = -0.09
+        emberEmitter.particleColor = SKColor(red: 1.0, green: 0.75, blue: 0.45, alpha: 1)
+        emberEmitter.particleColorBlendFactor = 1
+        emberEmitter.particleBlendMode = .add
+        emberEmitter.zPosition = -5
+        addChild(emberEmitter)
+    }
+
+    /// Renders a small vertical-gradient texture (dark near-black at the
+    /// bottom, a muted hue-tinted glow near the top) used as the battle
+    /// stage backdrop for the given zone.
+    private static func makeBackdropTexture(hue: CGFloat) -> SKTexture {
+        let size = CGSize(width: 64, height: 96)
+        let renderer = UIGraphicsImageRenderer(size: size)
+        let image = renderer.image { context in
+            let topColor = UIColor(hue: hue, saturation: 0.5, brightness: 0.30, alpha: 1)
+            let bottomColor = UIColor(hue: hue, saturation: 0.55, brightness: 0.07, alpha: 1)
+            let colorSpace = CGColorSpaceCreateDeviceRGB()
+            let colors = [topColor.cgColor, bottomColor.cgColor] as CFArray
+            guard let gradient = CGGradient(colorsSpace: colorSpace, colors: colors, locations: [0, 1]) else { return }
+            context.cgContext.drawLinearGradient(
+                gradient,
+                start: CGPoint(x: size.width / 2, y: 0),
+                end: CGPoint(x: size.width / 2, y: size.height),
+                options: []
+            )
+        }
+        return SKTexture(image: image)
+    }
+
+    /// A small soft radial blob used as the ember particle texture.
+    private static func makeGlowTexture() -> SKTexture {
+        let size = CGSize(width: 16, height: 16)
+        let renderer = UIGraphicsImageRenderer(size: size)
+        let image = renderer.image { context in
+            let colorSpace = CGColorSpaceCreateDeviceRGB()
+            let colors = [
+                UIColor.white.withAlphaComponent(0.9).cgColor,
+                UIColor.white.withAlphaComponent(0.0).cgColor,
+            ] as CFArray
+            guard let gradient = CGGradient(colorsSpace: colorSpace, colors: colors, locations: [0, 1]) else { return }
+            context.cgContext.drawRadialGradient(
+                gradient,
+                startCenter: CGPoint(x: size.width / 2, y: size.height / 2),
+                startRadius: 0,
+                endCenter: CGPoint(x: size.width / 2, y: size.height / 2),
+                endRadius: size.width / 2,
+                options: []
+            )
+        }
+        return SKTexture(image: image)
     }
 }

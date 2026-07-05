@@ -12,5 +12,7 @@ struct ContentView: View {
             PrestigeView()
                 .tabItem { Label("Prestige", systemImage: "sparkles") }
         }
+        .tint(Theme.essence)
+        .preferredColorScheme(.dark)
     }
 }

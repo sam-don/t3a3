@@ -27,7 +27,8 @@ targets:
     info:
       properties:
         CFBundleDisplayName: "Idle Delve"
-        UILaunchScreen: {}
+        UILaunchScreen:
+          UIColorName: LaunchBackground
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
         UISupportedInterfaceOrientations~ipad:

@@ -7,40 +7,58 @@ struct GearItemRow: View {
     var secondaryAction: (() -> Void)?
 
     var body: some View {
-        HStack {
-            Image(systemName: item.slot.icon)
-                .font(.title3)
-                .foregroundStyle(item.rarity.color)
-                .frame(width: 32)
+        HStack(spacing: 12) {
+            ZStack {
+                Circle()
+                    .fill(item.rarity.color.opacity(0.18))
+                    .frame(width: 40, height: 40)
+                Image(systemName: item.slot.icon)
+                    .font(.headline)
+                    .foregroundStyle(item.rarity.color)
+            }
 
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: 3) {
                 Text(item.name)
-                    .font(.subheadline.weight(.semibold))
+                    .font(.subheadline.weight(.bold))
                     .foregroundStyle(item.rarity.color)
                 Text(affixSummary)
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(.white.opacity(0.6))
                     .lineLimit(1)
             }
 
-            Spacer()
+            Spacer(minLength: 8)
 
             if let secondaryAction {
                 Button(action: secondaryAction) {
-                    Image(systemName: "dollarsign.circle")
+                    Image(systemName: "dollarsign.circle.fill")
+                        .font(.title3)
+                        .foregroundStyle(Theme.gold)
                 }
-                .buttonStyle(.borderless)
-                .tint(.secondary)
+                .buttonStyle(.plain)
             }
 
             if let action {
                 Button(isEquipped ? "Unequip" : "Equip", action: action)
-                    .buttonStyle(.bordered)
-                    .controlSize(.small)
-                    .tint(isEquipped ? .red : .accentColor)
+                    .font(.caption.weight(.bold))
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 7)
+                    .background(
+                        Capsule().fill(isEquipped ? Color.red.opacity(0.25) : Theme.essence.opacity(0.28))
+                    )
+                    .foregroundStyle(isEquipped ? .red : Theme.essence)
+                    .buttonStyle(.plain)
             }
         }
-        .padding(.vertical, 4)
+        .padding(12)
+        .background(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(Color.white.opacity(0.04))
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .strokeBorder(item.rarity.color.opacity(0.4), lineWidth: 1)
+        )
     }
 
     private var affixSummary: String {

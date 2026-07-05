@@ -38,12 +38,35 @@ IdleDelve/
   SpriteKit/      BattleScene — the animated battle stage (currently emoji
                   placeholder "sprites"; swap for real art via SKSpriteNode later)
   Views/          SwiftUI screens: Dungeon, Hero, Skills, Prestige
-  Resources/      Asset catalog (placeholder app icon / accent color)
+    Components/   Theme.swift (the shared dark-fantasy palette + card/background
+                   modifiers) plus every reusable piece: currency badges,
+                   progress bars, gear rows, stat rows
+  Resources/      Asset catalog: generated app icon, accent + launch-screen colors
 IdleDelveTests/   XCTest coverage for combat math, progression, offline simulation
+Scripts/          make_app_icon.py — regenerates the app icon (see Visual design)
 ```
 
 All game balance constants live in `Engine/Balance.swift` — tune difficulty,
 economy, and pacing there without touching engine logic.
+
+## Visual design
+
+The app forces dark mode (`ContentView.preferredColorScheme(.dark)`) and
+builds every screen on one palette defined in `Views/Components/Theme.swift`
+— a near-black dungeon gradient, gold for currency, magenta for essence/XP,
+green→red for HP. `.cardStyle()` and `.dungeonBackground()` view modifiers
+apply it consistently instead of default system List/Material styling.
+
+The battle stage (`SpriteKit/BattleScene.swift`) renders a real per-zone
+vertical gradient backdrop and ambient rising embers via a code-generated
+`SKEmitterNode` — no bundled image assets required. Hero/enemy are emoji
+placeholders (see Roadmap) with hit-lunge, punch, and floating damage-number
+animations already wired up.
+
+The app icon is procedurally generated — a glowing sword emblem on the same
+dungeon gradient — via `Scripts/make_app_icon.py` (`pip install numpy
+pillow`, then `python3 Scripts/make_app_icon.py`). Re-run it after tweaking
+the design; it writes straight into the asset catalog.
 
 ## Building
 

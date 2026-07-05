@@ -11,43 +11,54 @@ struct PrestigeView: View {
                     VStack(alignment: .leading, spacing: 10) {
                         Label("Essence", systemImage: "sparkle")
                             .font(.headline)
+                            .foregroundStyle(Theme.essence)
                         Text("\(Int(engine.state.essence)) essence banked")
                             .font(.subheadline)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(.white.opacity(0.6))
 
                         if engine.canPrestige {
                             Text("Prestiging now grants +\(Int(engine.prestigeReward)) essence, but resets your floor, level, gold, talents, and gear.")
                                 .font(.caption)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(.white.opacity(0.6))
                             Button("Prestige Now") {
                                 showConfirmation = true
                             }
-                            .buttonStyle(.borderedProminent)
-                            .tint(.pink)
+                            .font(.subheadline.weight(.bold))
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 10)
+                            .background(Capsule().fill(Theme.essenceGradient))
+                            .foregroundStyle(.white)
+                            .buttonStyle(.plain)
                         } else {
                             Text("Reach floor \(Balance.prestigeFloorRequirement) (currently \(engine.state.maxFloorReached)) to unlock prestiging.")
                                 .font(.caption)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(.white.opacity(0.6))
                             ProgressBarView(
                                 fraction: Double(engine.state.maxFloorReached) / Double(Balance.prestigeFloorRequirement),
-                                tint: .pink
+                                tint: Theme.essence
                             )
                             .frame(height: 8)
                         }
                     }
                     .padding(.vertical, 6)
                 }
+                .listRowBackground(Theme.rowFill)
 
                 Section {
                     ForEach(AscensionTree.upgrades) { upgrade in
                         ascensionRow(upgrade)
+                            .listRowBackground(Color.clear)
                     }
                 } header: {
-                    Text("Ascension")
+                    Text("ASCENSION")
+                        .font(.caption.weight(.bold))
+                        .foregroundStyle(Theme.essence)
                 } footer: {
                     Text("Permanent upgrades bought with essence. These never reset, even across prestiges.")
+                        .foregroundStyle(.white.opacity(0.5))
                 }
             }
+            .dungeonBackground()
             .navigationTitle("Prestige")
             .alert("Prestige?", isPresented: $showConfirmation) {
                 Button("Cancel", role: .cancel) {}
@@ -64,27 +75,34 @@ struct PrestigeView: View {
         let rank = engine.state.ascensionRanks[upgrade.id] ?? 0
         let maxed = rank >= upgrade.maxRank
         let cost = upgrade.cost(atRank: rank)
+        let affordable = engine.state.essence >= cost
 
-        return VStack(alignment: .leading, spacing: 6) {
+        return VStack(alignment: .leading, spacing: 8) {
             HStack {
                 Label(upgrade.name, systemImage: upgrade.stat.icon)
-                    .font(.subheadline.weight(.semibold))
+                    .font(.subheadline.weight(.bold))
+                    .foregroundStyle(.white)
                 Spacer()
                 Text("Rank \(rank)/\(upgrade.maxRank)")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.white.opacity(0.5))
             }
-            HStack {
-                ProgressBarView(fraction: Double(rank) / Double(upgrade.maxRank), tint: .pink)
+            HStack(spacing: 10) {
+                ProgressBarView(fraction: Double(rank) / Double(upgrade.maxRank), tint: Theme.essence)
                 Button(maxed ? "Maxed" : "\(Int(cost.rounded(.up))) Essence") {
                     engine.purchaseAscension(upgrade.id)
                 }
-                .buttonStyle(.borderedProminent)
-                .controlSize(.small)
-                .tint(.pink)
-                .disabled(maxed || engine.state.essence < cost)
+                .font(.caption.weight(.bold))
+                .padding(.horizontal, 12)
+                .padding(.vertical, 7)
+                .background(
+                    Capsule().fill(maxed || !affordable ? Color.white.opacity(0.08) : Theme.essence.opacity(0.35))
+                )
+                .foregroundStyle(maxed || !affordable ? .white.opacity(0.4) : .white)
+                .buttonStyle(.plain)
+                .disabled(maxed || !affordable)
             }
         }
-        .padding(.vertical, 4)
+        .cardStyle()
     }
 }

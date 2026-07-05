@@ -17,11 +17,12 @@ struct DungeonView: View {
                 }
                 .padding()
             }
+            .background(Theme.backgroundGradient.ignoresSafeArea())
             .navigationTitle("Idle Delve")
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
-                    CurrencyBadge(systemImage: "dollarsign.circle.fill", value: engine.state.gold, tint: .yellow)
-                    CurrencyBadge(systemImage: "sparkle", value: engine.state.essence, tint: .pink)
+                    CurrencyBadge(systemImage: "dollarsign.circle.fill", value: engine.state.gold, tint: Theme.gold)
+                    CurrencyBadge(systemImage: "sparkle", value: engine.state.essence, tint: Theme.essence)
                 }
             }
         }
@@ -46,24 +47,31 @@ struct DungeonView: View {
         HStack {
             VStack(alignment: .leading, spacing: 2) {
                 Text("Level \(engine.state.hero.level)")
-                    .font(.subheadline.weight(.semibold))
+                    .font(.system(.subheadline, design: .rounded).weight(.bold))
+                    .foregroundStyle(.white)
                 Text("Max Floor \(engine.state.maxFloorReached)")
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(.white.opacity(0.5))
             }
             Spacer()
-            CurrencyBadge(systemImage: "star.fill", value: Double(engine.state.skillPoints), tint: .purple)
+            CurrencyBadge(systemImage: "star.fill", value: Double(engine.state.skillPoints), tint: Theme.xpColor)
         }
     }
 
     private var battleStage: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: 10) {
             Text("\(zone.name) — Floor \(engine.state.currentFloor)")
-                .font(.headline)
+                .font(.system(.headline, design: .rounded).weight(.bold))
+                .foregroundStyle(.white)
 
             SpriteView(scene: scene, options: [.allowsTransparency])
                 .frame(height: 220)
-                .background(Color.black.opacity(0.15), in: RoundedRectangle(cornerRadius: 20))
+                .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                        .strokeBorder(Theme.cardStroke, lineWidth: 1)
+                )
+                .shadow(color: .black.opacity(0.4), radius: 12, y: 6)
                 .onTapGesture {
                     engine.tapAttack()
                 }
@@ -74,36 +82,38 @@ struct DungeonView: View {
                     Image(systemName: "hand.tap.fill")
                     Text(remaining > 0.05 ? "Ready in \(String(format: "%.1f", remaining))s" : "Tap the stage for a bonus strike!")
                 }
-                .font(.caption)
-                .foregroundStyle(remaining > 0.05 ? .secondary : Color.accentColor)
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(remaining > 0.05 ? .white.opacity(0.4) : Theme.essence)
             }
         }
     }
 
     private var heroHUD: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 14) {
             VStack(alignment: .leading, spacing: 4) {
                 HStack {
                     Label("Hero HP", systemImage: "heart.fill")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(.white.opacity(0.6))
                     Spacer()
                     Text("\(Int(engine.state.heroCurrentHP)) / \(Int(engine.stats.maxHP))")
-                        .font(.caption.monospacedDigit())
+                        .font(.caption.monospacedDigit().weight(.semibold))
+                        .foregroundStyle(.white)
                 }
-                ProgressBarView(fraction: hpFraction, tint: .green)
+                ProgressBarView(fraction: hpFraction, tint: hpFraction > 0.3 ? Theme.hp : Theme.hpLow)
             }
 
             VStack(alignment: .leading, spacing: 4) {
                 HStack {
                     Label("XP", systemImage: "star.fill")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(.white.opacity(0.6))
                     Spacer()
                     Text("\(Int(engine.state.hero.xp)) / \(Int(engine.state.hero.xpToNextLevel))")
-                        .font(.caption.monospacedDigit())
+                        .font(.caption.monospacedDigit().weight(.semibold))
+                        .foregroundStyle(.white)
                 }
-                ProgressBarView(fraction: xpFraction, tint: .purple)
+                ProgressBarView(fraction: xpFraction, tint: Theme.xpColor)
             }
 
             HStack {
@@ -111,8 +121,7 @@ struct DungeonView: View {
                 StatRowView(stat: .defense, value: Int(engine.stats.defense).description)
             }
         }
-        .padding()
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 16))
+        .cardStyle()
     }
 
     private var hpFraction: Double {
