@@ -1,0 +1,56 @@
+name: IdleDelve
+options:
+  bundleIdPrefix: com.samitha
+  deploymentTarget:
+    iOS: "16.0"
+  createIntermediateGroups: true
+configs:
+  Debug: debug
+  Release: release
+targets:
+  IdleDelve:
+    type: application
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: IdleDelve
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.samitha.idledelve
+        MARKETING_VERSION: "0.1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        SWIFT_VERSION: "5.9"
+        TARGETED_DEVICE_FAMILY: "1"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        DEVELOPMENT_TEAM: ""
+    info:
+      properties:
+        CFBundleDisplayName: "Idle Delve"
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+  IdleDelveTests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: IdleDelveTests
+    settings:
+      base:
+        SWIFT_VERSION: "5.9"
+    dependencies:
+      - target: IdleDelve
+schemes:
+  IdleDelve:
+    build:
+      targets:
+        IdleDelve: all
+        IdleDelveTests: [test]
+    test:
+      targets:
+        - IdleDelveTests
+    run:
+      config: Debug

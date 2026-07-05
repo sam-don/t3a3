@@ -1,6 +1,14 @@
-__pycache__
 .vscode
-venv
 .env
-docs
-dbdump.json
+
+# Xcode / Swift
+*.xcodeproj
+!default.xcodeproj
+xcuserdata/
+DerivedData/
+.build/
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+.swiftpm/
