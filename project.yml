@@ -25,6 +25,7 @@ targets:
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
         DEVELOPMENT_TEAM: ""
     info:
+      path: IdleDelve/Info.plist
       properties:
         CFBundleDisplayName: "Idle Delve"
         UILaunchScreen:
@@ -42,6 +43,7 @@ targets:
     settings:
       base:
         SWIFT_VERSION: "5.9"
+        GENERATE_INFOPLIST_FILE: "YES"
     dependencies:
       - target: IdleDelve
 schemes:
